@@ -1,0 +1,219 @@
+import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
+import { IExamDocument } from '../models/Exam';
+import logger from '../config/logger';
+
+export class ExportService {
+  async generateExamPDF(exam: IExamDocument): Promise<Buffer> {
+    logger.info(`Generating PDF for Exam: ${exam.title}`);
+    
+    // Create new PDF Document
+    const pdfDoc = await PDFDocument.create();
+    
+    // Standard page dimensions: Letter (612 x 792 points)
+    const pageWidth = 612;
+    const pageHeight = 792;
+    const margin = 54; // 0.75 in
+    
+    // Load Fonts
+    const fontRegular = await pdfDoc.embedFont(StandardFonts.TimesRoman);
+    const fontBold = await pdfDoc.embedFont(StandardFonts.TimesRomanBold);
+    const fontItalic = await pdfDoc.embedFont(StandardFonts.TimesRomanItalic);
+
+    let page = pdfDoc.addPage([pageWidth, pageHeight]);
+    let y = pageHeight - margin; // Start drawing at top margin
+
+    // Helper functions for drawing text and managing pagination
+    const checkPageBreak = (heightNeeded: number) => {
+      if (y - heightNeeded < margin) {
+        page = pdfDoc.addPage([pageWidth, pageHeight]);
+        y = pageHeight - margin;
+      }
+    };
+
+    const drawLine = () => {
+      checkPageBreak(15);
+      page.drawLine({
+        start: { x: margin, y: y },
+        end: { x: pageWidth - margin, y: y },
+        thickness: 1,
+        color: rgb(0.2, 0.2, 0.2),
+      });
+      y -= 15;
+    };
+
+    const drawText = (
+      text: string,
+      fontSize: number,
+      font: any,
+      lineHeight = 16,
+      indent = 0,
+      rightPadding = 0
+    ) => {
+      const maxWidth = pageWidth - (margin * 2) - indent - rightPadding;
+      const words = text.split(' ');
+      let currentLine = '';
+      const lines: string[] = [];
+
+      // Wrap text
+      for (const word of words) {
+        const testLine = currentLine ? `${currentLine} ${word}` : word;
+        const width = font.widthOfTextAtSize(testLine, fontSize);
+        if (width < maxWidth) {
+          currentLine = testLine;
+        } else {
+          lines.push(currentLine);
+          currentLine = word;
+        }
+      }
+      if (currentLine) {
+        lines.push(currentLine);
+      }
+
+      // Draw each line with page-break verification
+      for (const line of lines) {
+        checkPageBreak(lineHeight);
+        page.drawText(line, {
+          x: margin + indent,
+          y: y - fontSize,
+          size: fontSize,
+          font: font,
+          color: rgb(0.1, 0.1, 0.1),
+        });
+        y -= lineHeight;
+      }
+    };
+
+    // Header Letterhead
+    drawText(`Date Generated: ${new Date().toLocaleDateString()}`, 8, fontItalic, 12);
+    y -= 10;
+    
+    // Exam title
+    drawText(exam.title.toUpperCase(), 18, fontBold, 22);
+    drawLine();
+
+    // Student Info Form Fields
+    checkPageBreak(30);
+    page.drawText('Student Name: ________________________', { x: margin, y: y - 10, size: 10, font: fontRegular });
+    page.drawText('Roll No: ____________', { x: margin + 250, y: y - 10, size: 10, font: fontRegular });
+    page.drawText('Section: ________', { x: margin + 400, y: y - 10, size: 10, font: fontRegular });
+    y -= 25;
+    drawLine();
+
+    // Stats: Marks and Difficulty
+    checkPageBreak(20);
+    page.drawText(`Total Marks: ${exam.marks}`, { x: margin, y: y - 10, size: 10, font: fontBold });
+    page.drawText(`Target Difficulty: ${exam.difficulty}`, { x: margin + 150, y: y - 10, size: 10, font: fontRegular });
+    page.drawText(`Questions count: ${exam.totalQuestions}`, { x: margin + 300, y: y - 10, size: 10, font: fontRegular });
+    y -= 20;
+    drawLine();
+
+    // Add Instructions
+    if (exam.instructions) {
+      drawText('General Instructions:', 11, fontBold, 15);
+      drawText(exam.instructions, 10, fontItalic, 14, 10);
+      y -= 10;
+      drawLine();
+    }
+
+    // Question Sections
+    if (exam.generatedPaper?.sections) {
+      for (const section of exam.generatedPaper.sections) {
+        y -= 10;
+        // Section Title
+        drawText(section.title, 13, fontBold, 18);
+        // Section Instruction
+        drawText(`Instruction: ${section.instruction}`, 10, fontItalic, 14, 5);
+        y -= 5;
+
+        // Section Questions
+        let qIndex = 1;
+        for (const q of section.questions) {
+          y -= 5;
+          const questionText = `${qIndex}. ${q.text}`;
+          const marksLabel = `[${q.marks} Marks]`;
+          
+          // Estimate height needed for this question + its options to prevent awkward splitting
+          const getEstimatedHeight = () => {
+            const qWidth = pageWidth - (margin * 2) - 10 - 60; // indent=10, rightPadding=60
+            const words = questionText.split(' ');
+            let currentLine = '';
+            let linesCount = 0;
+            for (const word of words) {
+              const testLine = currentLine ? `${currentLine} ${word}` : word;
+              const width = fontRegular.widthOfTextAtSize(testLine, 10);
+              if (width < qWidth) {
+                currentLine = testLine;
+              } else {
+                linesCount++;
+                currentLine = word;
+              }
+            }
+            if (currentLine) linesCount++;
+            
+            let totalHeight = linesCount * 15;
+            
+            if (q.type === 'MCQ' && q.options && q.options.length > 0) {
+              totalHeight += 5;
+              for (const opt of q.options) {
+                const optText = `A.  ${opt}`;
+                const optWidth = pageWidth - (margin * 2) - 30;
+                const optWords = optText.split(' ');
+                let optCurrentLine = '';
+                let optLinesCount = 0;
+                for (const word of optWords) {
+                  const testLine = optCurrentLine ? `${optCurrentLine} ${word}` : word;
+                  const width = fontRegular.widthOfTextAtSize(testLine, 10);
+                  if (width < optWidth) {
+                    optCurrentLine = testLine;
+                  } else {
+                    optLinesCount++;
+                    optCurrentLine = word;
+                  }
+                }
+                if (optCurrentLine) optLinesCount++;
+                totalHeight += optLinesCount * 15;
+              }
+            }
+            return totalHeight + 15;
+          };
+
+          const neededHeight = getEstimatedHeight();
+          checkPageBreak(neededHeight);
+          
+          // Draw marks label right-aligned
+          const labelWidth = fontItalic.widthOfTextAtSize(marksLabel, 9);
+          page.drawText(marksLabel, {
+            x: pageWidth - margin - labelWidth,
+            y: y - 10,
+            size: 9,
+            font: fontItalic,
+            color: rgb(0.3, 0.3, 0.3),
+          });
+
+          // Draw question text (left-aligned, with right padding to avoid overlapping the marks label)
+          drawText(questionText, 10, fontRegular, 15, 10, 60);
+          
+          // Draw MCQ options if present
+          if (q.type === 'MCQ' && q.options && q.options.length > 0) {
+            y -= 5;
+            for (let i = 0; i < q.options.length; i++) {
+              const optionText = `${String.fromCharCode(65 + i)}.  ${q.options[i]}`;
+              drawText(optionText, 10, fontRegular, 15, 30);
+            }
+          }
+
+          qIndex++;
+        }
+      }
+    } else {
+      drawText('No question content generated for this paper.', 12, fontItalic, 16);
+    }
+
+    // Save PDF
+    const pdfBytes = await pdfDoc.save();
+    return Buffer.from(pdfBytes);
+  }
+}
+
+export const exportService = new ExportService();
+export default exportService;
