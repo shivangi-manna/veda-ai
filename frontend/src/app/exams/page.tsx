@@ -162,12 +162,12 @@ export default function ExamsPage() {
       </div>
 
       {/* Filter and Search Bar Capsule */}
-      <div className="bg-white rounded-full border border-[#eaeaea] h-[48px] px-6 flex items-center justify-between shadow-sm mb-6 no-print">
-        <span className="text-xs font-bold text-gray-500 flex items-center gap-2 cursor-pointer hover:text-gray-900">
+      <div className="bg-white rounded-[20px] sm:rounded-full border border-[#eaeaea] h-auto sm:h-[48px] py-3 sm:py-0 px-4 sm:px-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-0 shadow-sm mb-6 no-print">
+        <span className="text-xs font-bold text-gray-500 flex items-center gap-2 cursor-pointer hover:text-gray-900 justify-center sm:justify-start">
           <SlidersHorizontal className="w-3.5 h-3.5 text-gray-400" />
           Filter By
         </span>
-        <div className="relative w-64">
+        <div className="relative w-full sm:w-64">
           <Search className="w-3.5 h-3.5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
@@ -282,7 +282,7 @@ export default function ExamsPage() {
                       </div>
                     </div>
 
-                    <div className="flex justify-between items-center mt-4 text-xs font-semibold text-gray-500">
+                    <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center mt-4 gap-1.5 xs:gap-0 text-[11px] sm:text-xs font-semibold text-gray-500">
                       <span>Assigned on : {formatDate(exam.createdAt)}</span>
                       <span>Due : {formatDate(exam.dueDate)}</span>
                     </div>
@@ -316,7 +316,7 @@ export default function ExamsPage() {
                           style={{ width: `${progressUpdates[exam._id]?.progress || 0}%` }}
                         />
                       </div>
-                      <div className="flex justify-between items-center text-[10px] text-gray-400 font-semibold">
+                      <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center gap-1.5 xs:gap-0 text-[10px] text-gray-400 font-semibold">
                         <span>Assigned on : {formatDate(exam.createdAt)}</span>
                         <button
                           type="button"

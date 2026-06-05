@@ -280,7 +280,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 onClick={() => setMobileDrawer(false)}
               />
               <aside className="relative flex flex-col w-72 bg-white border-r border-[#eaeaea] p-6 h-full shadow-2xl justify-between">
-                <div className="flex flex-col flex-1">
+                <div className="flex flex-col flex-1 overflow-y-auto">
                   <div className="flex items-center justify-between mb-6">
                     <Link href="/" onClick={() => setMobileDrawer(false)} className="flex items-center gap-2 text-[#3d3d3d] font-bold text-xl">
                       <svg viewBox="0 0 100 100" className="w-9 h-9 flex-shrink-0 shadow-[0_3px_7px_rgba(0,0,0,0.06)]">
@@ -396,7 +396,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           )}
 
           {/* Main Layout Area */}
-          <main className="flex-1 flex flex-col m-4 ml-2 lg:m-4 lg:ml-2 overflow-hidden min-h-[calc(100vh-2rem)]">
+          <main className="flex-1 flex flex-col m-3 lg:m-4 lg:ml-2 overflow-hidden min-h-[calc(100vh-2rem)]">
             
             {/* Desktop Floating Top Header Capsule */}
             <header className="hidden lg:flex bg-[#fafafa]/80 backdrop-blur-md rounded-3xl h-[52px] items-center justify-between pl-[22px] pr-[26px] shadow-[0_2px_8px_rgba(0,0,0,0.03)] mb-6 flex-shrink-0 no-print">

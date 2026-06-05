@@ -260,7 +260,7 @@ export default function BuildPaper() {
       {/* Main Consolidated Card Form */}
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="bg-white border border-[#eaeaea] rounded-[24px] shadow-sm p-8 space-y-6"
+        className="bg-white border border-[#eaeaea] rounded-[24px] shadow-sm p-4 sm:p-8 space-y-6"
       >
         <div>
           <h3 className="text-base font-bold text-[#181818]">Exam Details</h3>
@@ -398,7 +398,7 @@ export default function BuildPaper() {
 
         {/* Question Type Section */}
         <div className="space-y-4 pt-2">
-          <div className="flex justify-between items-center mb-1 text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+          <div className="hidden sm:flex justify-between items-center mb-1 text-[10px] font-bold text-gray-400 uppercase tracking-wider">
             <span>Question Type</span>
             <div className="flex gap-[70px] mr-12">
               <span>No. of Questions</span>
@@ -411,69 +411,77 @@ export default function BuildPaper() {
               .map((row, idx) => {
                 if (!row.active) return null;
                 return (
-                  <div key={row.key} className="flex items-center gap-3 animate-fade-in">
-                    {/* Dropdown for question type selection */}
-                    <div className="relative flex-1">
-                      <select
-                        value={row.label}
-                        onChange={(e) => handleLabelChange(idx, e.target.value)}
-                        className="w-full px-5 py-2.5 bg-[#f4f4f4] border-none rounded-full text-xs text-[#181818] focus:outline-none appearance-none cursor-pointer font-medium"
-                      >
-                        <option value="Multiple Choice Questions">Multiple Choice Questions</option>
-                        <option value="Short Questions">Short Questions</option>
-                        <option value="Diagram/Graph-Based Questions">Diagram/Graph-Based Questions</option>
-                        <option value="Numerical Problems">Numerical Problems</option>
-                        <option value="Long Questions">Long Questions</option>
-                        <option value="True/False">True/False</option>
-                      </select>
-                      <ChevronDown className="w-4 h-4 text-gray-400 absolute right-5 top-3 pointer-events-none" />
-                    </div>
+                  <div key={row.key} className="flex flex-col sm:flex-row sm:items-center gap-3 p-4 sm:p-0 bg-gray-50/50 sm:bg-transparent rounded-[20px] sm:rounded-none border border-gray-100 sm:border-none animate-fade-in">
+                    {/* Top row: Dropdown select + Delete button */}
+                    <div className="flex items-center gap-2.5 w-full sm:flex-1">
+                      <div className="relative flex-1">
+                        <select
+                          value={row.label}
+                          onChange={(e) => handleLabelChange(idx, e.target.value)}
+                          className="w-full px-5 py-2.5 bg-[#f4f4f4] border-none rounded-full text-xs text-[#181818] focus:outline-none appearance-none cursor-pointer font-medium"
+                        >
+                          <option value="Multiple Choice Questions">Multiple Choice Questions</option>
+                          <option value="Short Questions">Short Questions</option>
+                          <option value="Diagram/Graph-Based Questions">Diagram/Graph-Based Questions</option>
+                          <option value="Numerical Problems">Numerical Problems</option>
+                          <option value="Long Questions">Long Questions</option>
+                          <option value="True/False">True/False</option>
+                        </select>
+                        <ChevronDown className="w-4 h-4 text-gray-400 absolute right-5 top-3 pointer-events-none" />
+                      </div>
 
-                    {/* Delete icon */}
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveRow(idx)}
-                      className="p-1 hover:bg-gray-100 rounded-full transition-colors focus:outline-none"
-                    >
-                      <X className="w-4 h-4 text-gray-400 hover:text-gray-900 cursor-pointer" />
-                    </button>
-
-                    {/* Questions counter capsule */}
-                    <div className="flex items-center bg-[#f4f4f4] rounded-full px-3 py-1.5 gap-3.5 w-[85px] justify-between">
-                      <button 
+                      <button
                         type="button"
-                        onClick={() => updateRowValue(idx, 'count', Math.max(1, row.count - 1))}
-                        className="text-gray-400 hover:text-gray-900 font-bold text-xs select-none focus:outline-none"
+                        onClick={() => handleRemoveRow(idx)}
+                        className="p-2 hover:bg-gray-200/50 rounded-full transition-colors focus:outline-none flex-shrink-0"
                       >
-                        —
-                      </button>
-                      <span className="text-xs font-bold text-[#181818]">{row.count}</span>
-                      <button 
-                        type="button"
-                        onClick={() => updateRowValue(idx, 'count', row.count + 1)}
-                        className="text-gray-400 hover:text-gray-900 font-bold text-xs select-none focus:outline-none"
-                      >
-                        +
+                        <X className="w-4 h-4 text-gray-400 hover:text-gray-900 cursor-pointer" />
                       </button>
                     </div>
 
-                    {/* Marks counter capsule */}
-                    <div className="flex items-center bg-[#f4f4f4] rounded-full px-3 py-1.5 gap-3.5 w-[85px] justify-between">
-                      <button 
-                        type="button"
-                        onClick={() => updateRowValue(idx, 'marks', Math.max(1, row.marks - 1))}
-                        className="text-gray-400 hover:text-gray-900 font-bold text-xs select-none focus:outline-none"
-                      >
-                        —
-                      </button>
-                      <span className="text-xs font-bold text-[#181818]">{row.marks}</span>
-                      <button 
-                        type="button"
-                        onClick={() => updateRowValue(idx, 'marks', row.marks + 1)}
-                        className="text-gray-400 hover:text-gray-900 font-bold text-xs select-none focus:outline-none"
-                      >
-                        +
-                      </button>
+                    {/* Bottom row: Counter capsules */}
+                    <div className="flex items-center justify-between sm:justify-start gap-4 w-full sm:w-auto">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider sm:hidden">No. of Qs</span>
+                        <div className="flex items-center bg-[#f4f4f4] rounded-full px-3 py-1.5 gap-3.5 w-[85px] justify-between">
+                          <button 
+                            type="button"
+                            onClick={() => updateRowValue(idx, 'count', Math.max(1, row.count - 1))}
+                            className="text-gray-400 hover:text-gray-900 font-bold text-xs select-none focus:outline-none"
+                          >
+                            —
+                          </button>
+                          <span className="text-xs font-bold text-[#181818]">{row.count}</span>
+                          <button 
+                            type="button"
+                            onClick={() => updateRowValue(idx, 'count', row.count + 1)}
+                            className="text-gray-400 hover:text-gray-900 font-bold text-xs select-none focus:outline-none"
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider sm:hidden">Marks</span>
+                        <div className="flex items-center bg-[#f4f4f4] rounded-full px-3 py-1.5 gap-3.5 w-[85px] justify-between">
+                          <button 
+                            type="button"
+                            onClick={() => updateRowValue(idx, 'marks', Math.max(1, row.marks - 1))}
+                            className="text-gray-400 hover:text-gray-900 font-bold text-xs select-none focus:outline-none"
+                          >
+                            —
+                          </button>
+                          <span className="text-xs font-bold text-[#181818]">{row.marks}</span>
+                          <button 
+                            type="button"
+                            onClick={() => updateRowValue(idx, 'marks', row.marks + 1)}
+                            className="text-gray-400 hover:text-gray-900 font-bold text-xs select-none focus:outline-none"
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 );

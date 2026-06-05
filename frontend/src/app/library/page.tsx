@@ -96,7 +96,7 @@ export default function LibraryPage() {
       </div>
 
       {/* Tabs Selector Bar */}
-      <div className="bg-white rounded-full border border-[#eaeaea] h-[48px] px-2 flex items-center shadow-sm w-fit gap-1.5 no-print">
+      <div className="bg-white rounded-[20px] sm:rounded-full border border-[#eaeaea] h-auto sm:h-[48px] px-3 sm:px-2 py-2 sm:py-0 flex flex-wrap sm:flex-nowrap items-center shadow-sm w-full sm:w-fit gap-1.5 no-print">
         <button
           onClick={() => setActiveTab('syllabus')}
           className={`px-5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
@@ -152,7 +152,7 @@ export default function LibraryPage() {
                   </p>
                 </div>
 
-                <div className="flex justify-between items-center mt-6 pt-4 border-t border-gray-50">
+                <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center mt-6 gap-1.5 xs:gap-0 pt-4 border-t border-gray-50">
                   <span className="text-[10px] font-semibold text-gray-400">
                     {blueprint.topics} Syllabus Topics
                   </span>
@@ -201,7 +201,7 @@ export default function LibraryPage() {
                   </p>
                 </div>
 
-                <div className="flex justify-between items-center mt-6 pt-4 border-t border-gray-50 text-[10px] font-semibold text-gray-400">
+                <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center mt-6 gap-1.5 xs:gap-0 pt-4 border-t border-gray-50 text-[10px] font-semibold text-gray-400">
                   <span>Saved on: {rubric.savedOn}</span>
                   <div className="text-blue-600 font-bold flex items-center gap-1">
                     <CheckCircle className="w-3.5 h-3.5 fill-blue-50 text-blue-600" />
@@ -255,7 +255,7 @@ export default function LibraryPage() {
                     </a>
                   </div>
 
-                  <div className="flex justify-between items-center mt-6 text-xs font-semibold text-gray-500 border-t border-gray-50 pt-4">
+                  <div className="flex flex-col xs:flex-row justify-between items-start xs:items-center mt-6 gap-1.5 xs:gap-0 text-[11px] sm:text-xs font-semibold text-gray-500 border-t border-gray-50 pt-4">
                     <span>Generated on: {formatDate(exam.createdAt)}</span>
                     <Link
                       href={`/paper-view/${exam._id}`}
