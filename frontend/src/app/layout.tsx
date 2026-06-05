@@ -137,7 +137,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <path d="M22 26h15.5l11 29.5c.5 1.3 1 1.8 1.5 2.5L45 75h-2c-2.5 0-4.5-1.5-5-3.5L22 26z" fill="url(#left-wing-mobile)" />
               <path d="M45 75l5-17c.5-.7 1-1.2 1.5-2.5l11-29.5H78L57.5 71.5c-.5 2-2.5 3.5-5 3.5H45z" fill="#ffffff" />
             </svg>
-            <span className="tracking-tight">Assessify</span>
+            <span className="tracking-tight">Veda AI</span>
           </Link>
           <div className="flex items-center gap-4">
             <button className="p-2 text-gray-500 hover:text-gray-900 transition-colors">
@@ -186,7 +186,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     <path d="M22 26h15.5l11 29.5c.5 1.3 1 1.8 1.5 2.5L45 75h-2c-2.5 0-4.5-1.5-5-3.5L22 26z" fill="url(#left-wing-desktop)" />
                     <path d="M45 75l5-17c.5-.7 1-1.2 1.5-2.5l11-29.5H78L57.5 71.5c-.5 2-2.5 3.5-5 3.5H45z" fill="#ffffff" />
                   </svg>
-                  <span className="tracking-[-0.03em]">Assessify</span>
+                  <span className="tracking-[-0.03em]">Veda AI</span>
                 </Link>
               </div>
 
@@ -305,7 +305,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                         <path d="M22 26h15.5l11 29.5c.5 1.3 1 1.8 1.5 2.5L45 75h-2c-2.5 0-4.5-1.5-5-3.5L22 26z" fill="url(#left-wing-drawer)" />
                         <path d="M45 75l5-17c.5-.7 1-1.2 1.5-2.5l11-29.5H78L57.5 71.5c-.5 2-2.5 3.5-5 3.5H45z" fill="#ffffff" />
                       </svg>
-                      <span className="tracking-[-0.03em]">Assessify</span>
+                      <span className="tracking-[-0.03em]">Veda AI</span>
                     </Link>
                     <button
                       onClick={() => setMobileDrawer(false)}

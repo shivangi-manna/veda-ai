@@ -225,8 +225,8 @@ export default function BuildPaper() {
     form.append('file', uploadedFile);
 
     const result = await createExam(form);
-    if (result) {
-      router.push('/');
+    if (result && result._id) {
+      router.push(`/paper-view/${result._id}`);
     }
   };
 

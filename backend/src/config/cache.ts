@@ -18,7 +18,6 @@ const connectionOptions: RedisOptions = {
 if (isSecure) {
   connectionOptions.tls = {};
 }
-
 // Configure cache client with auto-reconnection and retry logic
 export const cacheConnection = new Redis(cacheUrl, connectionOptions);
 
