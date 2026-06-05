@@ -51,7 +51,16 @@ Create a `.env` file inside the `backend/` directory:
 PORT=5001
 MONGODB_URI=mongodb://localhost:27017/assessify
 REDIS_URL=redis://localhost:6379
+
+# AI Provider Keys (The platform dynamically detects the active provider)
+# Option A: For Anthropic / OpenAI-compatible endpoint (e.g. freemodel.dev)
+ANTHROPIC_API_KEY=your-anthropic-api-key-here
+ANTHROPIC_BASE_URL=https://api.freemodel.dev
+ANTHROPIC_MODEL=gpt-5.5
+
+# Option B: For Google Gemini API
 GEMINI_API_KEY=your-gemini-api-key-here
+
 FRONTEND_URL=http://localhost:3000
 NODE_ENV=development
 ```

@@ -1,14 +1,31 @@
 import { GeminiProvider } from './providers/gemini.provider';
+import { OpenAIProvider } from './providers/openai.provider';
 import { PromptBuilder } from './prompt.builder';
 import { AIResponseParser } from './parser';
 import { AIResponseValidator } from './validator';
-import { IPaperInput, RegenerationVariant, NonRetryableError } from './types';
+import { IPaperInput, RegenerationVariant, NonRetryableError, IAIProvider } from './types';
 import { normalizeExam } from '../../utils/normalizeExam';
 import chunkingService from '../chunking.service';
 import logger from '../../config/logger';
 
 export class LLMService {
-  private provider = new GeminiProvider();
+  private provider: IAIProvider & { isDemoMode(): boolean };
+
+  constructor() {
+    const anthropicKey = process.env.ANTHROPIC_API_KEY;
+    const hasAnthropic = anthropicKey && 
+                         !anthropicKey.startsWith('anthropic-placeholder') && 
+                         anthropicKey !== 'YOUR_ANTHROPIC_API_KEY' &&
+                         anthropicKey.trim().length > 0;
+
+    if (hasAnthropic) {
+      logger.info('[LLMService] Initializing with OpenAI-compatible/Anthropic provider.');
+      this.provider = new OpenAIProvider();
+    } else {
+      logger.info('[LLMService] Initializing with Google Gemini provider.');
+      this.provider = new GeminiProvider();
+    }
+  }
 
   /**
    * Extracts a syllabus summary containing course and topics/keywords.
