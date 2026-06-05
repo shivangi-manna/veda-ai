@@ -131,3 +131,90 @@
 [2026-06-04 22:47:44:4744] [[32minfo[39m]: [32mEvent [exam:completed] - Exam ID: 6a21b3362fb5c8382bed63c7, Completed in 1543ms[39m
 [2026-06-04 22:47:44:4744] [[32minfo[39m]: [32mSuccessfully completed generation of Exam: 6a21b3362fb5c8382bed63c7 in 1543ms[39m
 [2026-06-04 22:47:48:4748] [[32minfo[39m]: [32mGenerating PDF for Exam: CBSE Grade 8 Electricity Midterm[39m
+[2026-06-04 23:11:27:1127] [[33mwarn[39m]: [33mCache server connection lost. Retrying in 100ms...[39m
+[2026-06-04 23:28:53:2853] [[33mwarn[39m]: [33mDatabase disconnected[39m
+[2026-06-04 23:28:53:2853] [[33mwarn[39m]: [33mCache server connection lost. Retrying in 100ms...[39m
+[2026-06-04 23:45:14:4514] [[32minfo[39m]: [32mDatabase connected successfully[39m
+[2026-06-05 00:02:55:255] [[33mwarn[39m]: [33mDatabase disconnected[39m
+[2026-06-05 00:02:55:255] [[33mwarn[39m]: [33mCache server connection lost. Retrying in 100ms...[39m
+[2026-06-05 00:18:07:187] [[32minfo[39m]: [32mDatabase connected successfully[39m
+[2026-06-05 00:18:59:1859] [[33mwarn[39m]: [33mDatabase disconnected[39m
+[2026-06-05 00:18:59:1859] [[33mwarn[39m]: [33mCache server connection lost. Retrying in 100ms...[39m
+[2026-06-05 00:19:09:199] [[32minfo[39m]: [32mDatabase connected successfully[39m
+[2026-06-05 00:35:19:3519] [[33mwarn[39m]: [33mDatabase disconnected[39m
+[2026-06-05 00:35:19:3519] [[33mwarn[39m]: [33mCache server connection lost. Retrying in 100ms...[39m
+[2026-06-05 00:35:29:3529] [[32minfo[39m]: [32mDatabase connected successfully[39m
+[2026-06-05 00:53:05:535] [[33mwarn[39m]: [33mDatabase disconnected[39m
+[2026-06-05 00:53:05:535] [[33mwarn[39m]: [33mCache server connection lost. Retrying in 100ms...[39m
+[2026-06-05 00:58:53:5853] [[32minfo[39m]: [32mDatabase connected successfully[39m
+[2026-06-05 01:16:13:1613] [[33mwarn[39m]: [33mDatabase disconnected[39m
+[2026-06-05 01:16:13:1613] [[33mwarn[39m]: [33mCache server connection lost. Retrying in 100ms...[39m
+[2026-06-05 01:16:23:1623] [[32minfo[39m]: [32mDatabase connected successfully[39m
+[2026-06-05 01:33:03:333] [[33mwarn[39m]: [33mCache server connection lost. Retrying in 100ms...[39m
+[2026-06-05 01:49:31:4931] [[33mwarn[39m]: [33mDatabase disconnected[39m
+[2026-06-05 01:49:31:4931] [[33mwarn[39m]: [33mCache server connection lost. Retrying in 100ms...[39m
+[2026-06-05 01:59:53:5953] [[32minfo[39m]: [32mDatabase connected successfully[39m
+[2026-06-05 02:17:46:1746] [[33mwarn[39m]: [33mDatabase disconnected[39m
+[2026-06-05 02:17:46:1746] [[33mwarn[39m]: [33mCache server connection lost. Retrying in 100ms...[39m
+[2026-06-05 02:27:10:2710] [[32minfo[39m]: [32mDatabase connected successfully[39m
+[2026-06-05 02:43:16:4316] [[33mwarn[39m]: [33mDatabase disconnected[39m
+[2026-06-05 02:43:16:4316] [[33mwarn[39m]: [33mCache server connection lost. Retrying in 100ms...[39m
+[2026-06-05 02:43:26:4326] [[32minfo[39m]: [32mDatabase connected successfully[39m
+[2026-06-05 03:01:49:149] [[33mwarn[39m]: [33mDatabase disconnected[39m
+[2026-06-05 03:01:49:149] [[33mwarn[39m]: [33mCache server connection lost. Retrying in 100ms...[39m
+[2026-06-05 03:17:43:1743] [[32minfo[39m]: [32mDatabase connected successfully[39m
+[2026-06-05 03:35:00:350] [[33mwarn[39m]: [33mDatabase disconnected[39m
+[2026-06-05 03:35:00:350] [[33mwarn[39m]: [33mCache server connection lost. Retrying in 100ms...[39m
+[2026-06-05 03:52:37:5237] [[32minfo[39m]: [32mDatabase connected successfully[39m
+[2026-06-05 04:10:10:1010] [[33mwarn[39m]: [33mDatabase disconnected[39m
+[2026-06-05 04:10:10:1010] [[33mwarn[39m]: [33mCache server connection lost. Retrying in 100ms...[39m
+[2026-06-05 04:10:21:1021] [[32minfo[39m]: [32mDatabase connected successfully[39m
+[2026-06-05 04:26:20:2620] [[33mwarn[39m]: [33mDatabase disconnected[39m
+[2026-06-05 04:26:20:2620] [[33mwarn[39m]: [33mCache server connection lost. Retrying in 100ms...[39m
+[2026-06-05 04:42:39:4239] [[32minfo[39m]: [32mDatabase connected successfully[39m
+[2026-06-05 05:00:37:037] [[33mwarn[39m]: [33mDatabase disconnected[39m
+[2026-06-05 05:00:37:037] [[33mwarn[39m]: [33mCache server connection lost. Retrying in 100ms...[39m
+[2026-06-05 05:15:52:1552] [[32minfo[39m]: [32mDatabase connected successfully[39m
+[2026-06-05 05:32:25:3225] [[33mwarn[39m]: [33mDatabase disconnected[39m
+[2026-06-05 05:32:25:3225] [[33mwarn[39m]: [33mCache server connection lost. Retrying in 100ms...[39m
+[2026-06-05 05:50:20:5020] [[32minfo[39m]: [32mDatabase connected successfully[39m
+[2026-06-05 05:50:21:5021] [[33mwarn[39m]: [33mCache server connection lost. Retrying in 100ms...[39m
+[2026-06-05 05:54:05:545] [[33mwarn[39m]: [33mDatabase disconnected[39m
+[2026-06-05 05:54:05:545] [[33mwarn[39m]: [33mCache server connection lost. Retrying in 100ms...[39m
+[2026-06-05 05:54:15:5415] [[32minfo[39m]: [32mDatabase connected successfully[39m
+[2026-06-05 06:12:35:1235] [[33mwarn[39m]: [33mDatabase disconnected[39m
+[2026-06-05 06:12:35:1235] [[33mwarn[39m]: [33mCache server connection lost. Retrying in 100ms...[39m
+[2026-06-05 06:29:50:2950] [[32minfo[39m]: [32mDatabase connected successfully[39m
+[2026-06-05 06:47:40:4740] [[33mwarn[39m]: [33mDatabase disconnected[39m
+[2026-06-05 06:47:41:4741] [[33mwarn[39m]: [33mCache server connection lost. Retrying in 100ms...[39m
+[2026-06-05 06:48:05:485] [[32minfo[39m]: [32mDatabase connected successfully[39m
+[2026-06-05 07:05:45:545] [[33mwarn[39m]: [33mDatabase disconnected[39m
+[2026-06-05 07:05:45:545] [[33mwarn[39m]: [33mCache server connection lost. Retrying in 100ms...[39m
+[2026-06-05 07:23:37:2337] [[32minfo[39m]: [32mDatabase connected successfully[39m
+[2026-06-05 07:39:25:3925] [[33mwarn[39m]: [33mDatabase disconnected[39m
+[2026-06-05 07:39:26:3926] [[33mwarn[39m]: [33mCache server connection lost. Retrying in 100ms...[39m
+[2026-06-05 07:55:42:5542] [[32minfo[39m]: [32mDatabase connected successfully[39m
+[2026-06-05 08:13:05:135] [[33mwarn[39m]: [33mCache server connection lost. Retrying in 100ms...[39m
+[2026-06-05 08:30:52:3052] [[33mwarn[39m]: [33mDatabase disconnected[39m
+[2026-06-05 08:30:52:3052] [[33mwarn[39m]: [33mCache server connection lost. Retrying in 100ms...[39m
+[2026-06-05 08:48:36:4836] [[32minfo[39m]: [32mDatabase connected successfully[39m
+[2026-06-05 09:06:02:62] [[33mwarn[39m]: [33mDatabase disconnected[39m
+[2026-06-05 09:06:02:62] [[33mwarn[39m]: [33mCache server connection lost. Retrying in 100ms...[39m
+[2026-06-05 09:22:38:2238] [[32minfo[39m]: [32mDatabase connected successfully[39m
+[2026-06-05 09:24:40:2440] [[33mwarn[39m]: [33mDatabase disconnected[39m
+[2026-06-05 09:24:40:2440] [[33mwarn[39m]: [33mCache server connection lost. Retrying in 100ms...[39m
+[2026-06-05 09:24:50:2450] [[32minfo[39m]: [32mDatabase connected successfully[39m
+[2026-06-05 09:41:12:4112] [[33mwarn[39m]: [33mDatabase disconnected[39m
+[2026-06-05 09:41:12:4112] [[33mwarn[39m]: [33mCache server connection lost. Retrying in 100ms...[39m
+[2026-06-05 09:46:41:4641] [[32minfo[39m]: [32mDatabase connected successfully[39m
+[2026-06-05 09:48:21:4821] [[33mwarn[39m]: [33mCache server connection lost. Retrying in 100ms...[39m
+[2026-06-05 10:04:43:443] [[33mwarn[39m]: [33mCache server connection lost. Retrying in 100ms...[39m
+[2026-06-05 10:20:04:204] [[33mwarn[39m]: [33mDatabase disconnected[39m
+[2026-06-05 10:20:04:204] [[33mwarn[39m]: [33mCache server connection lost. Retrying in 100ms...[39m
+[2026-06-05 10:27:41:2741] [[32minfo[39m]: [32mDatabase connected successfully[39m
+[2026-06-05 10:45:00:450] [[33mwarn[39m]: [33mDatabase disconnected[39m
+[2026-06-05 10:45:00:450] [[33mwarn[39m]: [33mCache server connection lost. Retrying in 100ms...[39m
+[2026-06-05 10:55:41:5541] [[32minfo[39m]: [32mDatabase connected successfully[39m
+[2026-06-05 13:58:45:5845] [[32minfo[39m]: [32mSocket client connected: gYHmBWJ97XJJdyfOAAAB[39m
+[2026-06-05 13:59:51:5951] [[32minfo[39m]: [32mSocket client disconnected: gYHmBWJ97XJJdyfOAAAB[39m
+[2026-06-05 13:59:51:5951] [[32minfo[39m]: [32mSocket client connected: BdGAVAH5aW--qp4mAAAD[39m

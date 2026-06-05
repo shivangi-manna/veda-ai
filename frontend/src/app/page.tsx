@@ -1,91 +1,46 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
-import { useExamStore, IExam } from '../store/useExamStore';
+import { useExamStore } from '../store/useExamStore';
 import { useUIStore } from '../store/useUIStore';
 import {
-  Calendar,
-  Award,
-  Trash2,
-  CheckCircle,
-  FileText,
-  AlertTriangle,
-  RotateCw,
-  Clock,
   Sparkles,
-  BookOpen,
-  MoreVertical,
-  SlidersHorizontal,
+  FileText,
+  Clock,
+  Users,
+  Notebook,
+  History,
+  ArrowRight,
+  TrendingUp,
+  Bookmark,
   Plus,
-  Search,
 } from 'lucide-react';
 
-export default function Dashboard() {
-  const { exams, loading, fetchExams, deleteExam, regenerateExam, cancelExam, progressUpdates } =
-    useExamStore();
-  const addToast = useUIStore((state) => state.addToast);
+export default function HomeDashboard() {
+  const { exams, loading, fetchExams } = useExamStore();
+  const { userName, organizationName } = useUIStore();
 
-  const [searchTerm] = useState('');
-  const [statusFilter] = useState('');
-  const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
-
-  // Fetch list of exams
   useEffect(() => {
-    fetchExams(searchTerm, statusFilter);
-  }, [searchTerm, statusFilter, fetchExams]);
+    fetchExams();
+  }, [fetchExams]);
 
-  // Dashboard polling fallback for active generations
-  useEffect(() => {
-    const hasGenerating = exams.some((e) =>
-      ['queued', 'processing', 'generating'].includes(e.status)
-    );
-
-    if (!hasGenerating) return;
-
-    const interval = setInterval(() => {
-      fetchExams(searchTerm, statusFilter);
-    }, 4000);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [exams, searchTerm, statusFilter, fetchExams]);
-
-  // Close card menu on click outside
-  useEffect(() => {
-    const handleOutsideClick = () => {
-      setActiveMenuId(null);
-    };
-    window.addEventListener('click', handleOutsideClick);
-    return () => {
-      window.removeEventListener('click', handleOutsideClick);
-    };
-  }, []);
-
-  const handleDelete = async (id: string, e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (confirm('Are you sure you want to delete this exam paper?')) {
-      await deleteExam(id);
+  const completedExams = exams.filter((e) => e.status === 'completed');
+  
+  // Calculate total questions generated across all completed exams
+  const totalQuestions = completedExams.reduce((sum, exam) => {
+    let qCount = 0;
+    if (exam.generatedPaper?.sections) {
+      exam.generatedPaper.sections.forEach((sec) => {
+        qCount += sec.questions.length;
+      });
     }
-  };
+    return sum + qCount;
+  }, 0);
 
-  const handleRetry = async (id: string, e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    await regenerateExam(id, 'default');
-  };
+  // Calculate total hours saved (approx. 2.5 hours per paper)
+  const hoursSaved = completedExams.length * 2.5;
 
-  const handleCancel = async (id: string, e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (confirm('Are you sure you want to cancel the AI generation for this exam?')) {
-      await cancelExam(id);
-    }
-  };
-
-  // Format date helper: DD-MM-YYYY
   const formatDate = (dateStr: string) => {
     const d = new Date(dateStr);
     if (isNaN(d.getTime())) return dateStr;
@@ -95,303 +50,238 @@ export default function Dashboard() {
     return `${dd}-${mm}-${yyyy}`;
   };
 
-  // Status Badge Helper for light mode
-  const renderStatusBadge = (exam: IExam) => {
-    const liveProgress = progressUpdates[exam._id];
-    const status = liveProgress?.status || exam.status;
-    const progressPercent = liveProgress?.progress || (status === 'completed' ? 100 : 0);
-
-    switch (status) {
-      case 'completed':
-        return (
-          <span className="flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-            <CheckCircle className="w-3.5 h-3.5" />
-            Completed
-          </span>
-        );
-      case 'cancelled':
-        return (
-          <span className="flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
-            <AlertTriangle className="w-3.5 h-3.5" />
-            Cancelled
-          </span>
-        );
-      case 'failed':
-        return (
-          <span className="flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200">
-            <AlertTriangle className="w-3.5 h-3.5" />
-            Failed
-          </span>
-        );
-      case 'processing':
-      case 'generating':
-        return (
-          <span className="flex items-center gap-1.5 text-[11px] font-bold px-2 py-0.5 rounded-full bg-orange-50 text-[#ed6c37] border border-orange-200">
-            <svg className="animate-spin h-3 w-3 text-[#ed6c37]" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-            </svg>
-            <span>{status === 'generating' ? 'Generating' : 'Reading File'} ({progressPercent}%)</span>
-          </span>
-        );
-      case 'queued':
+  const getDifficultyColor = (diff: string) => {
+    switch (diff) {
+      case 'Easy':
+        return 'bg-emerald-50 text-emerald-700 border border-emerald-200';
+      case 'Medium':
+      case 'Moderate':
+        return 'bg-amber-50 text-amber-700 border border-amber-200';
+      case 'Hard':
+      case 'Challenging':
+        return 'bg-rose-50 text-rose-700 border border-rose-200';
       default:
-        return (
-          <span className="flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
-            <Clock className="w-3.5 h-3.5 animate-pulse" />
-            Queued
-          </span>
-        );
+        return 'bg-gray-50 text-gray-700 border border-gray-200';
     }
   };
 
   return (
-    <div className="flex-1 flex flex-col relative pb-24 px-1 lg:px-4">
-      {/* Subheader page title */}
-      <div className="mb-6 mt-2 text-left">
-        <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#34c759] flex-shrink-0" />
-          <h2 className="text-[19px] font-bold text-[#181818] tracking-tight">Exams</h2>
-        </div>
-        <p className="text-gray-500 text-xs mt-1 pl-[18px]">Manage and create exam papers for your classes.</p>
-      </div>
+    <div className="flex-1 flex flex-col relative pb-24 px-1 lg:px-4 space-y-8 text-left">
+      
+      {/* 1. Welcoming Hero Banner */}
+      <div className="relative overflow-hidden rounded-[32px] bg-gradient-to-r from-[#2d2d30] to-[#18181b] p-8 lg:p-10 shadow-lg text-white">
+        {/* Absolute decorative gradient circles */}
+        <div className="absolute top-0 right-0 w-80 h-80 rounded-full bg-gradient-to-b from-[#ed6c37]/25 to-transparent blur-3xl -mr-20 -mt-20 pointer-events-none" />
+        <div className="absolute bottom-0 right-1/3 w-64 h-64 rounded-full bg-gradient-to-t from-pink-500/10 to-transparent blur-3xl pointer-events-none" />
 
-      {/* Filter and Search Bar Capsule */}
-      <div className="bg-white rounded-full border border-[#eaeaea] h-[48px] px-6 flex items-center justify-between shadow-sm mb-6 no-print">
-        <span className="text-xs font-bold text-gray-500 flex items-center gap-2 cursor-pointer hover:text-gray-900">
-          <SlidersHorizontal className="w-3.5 h-3.5 text-gray-400" />
-          Filter By
-        </span>
-        <div className="relative w-64">
-          <Search className="w-3.5 h-3.5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
-          <input
-            type="text"
-            placeholder="Search Exam"
-            className="w-full pl-9 pr-4 py-1.5 bg-white border border-[#eaeaea] rounded-full text-xs placeholder-gray-400 focus:outline-none focus:border-[#ed6c37]"
-          />
-        </div>
-      </div>
-
-
-      {loading ? (
-        // Grid Loading Skeleton Screen
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[...Array(6)].map((_, i) => (
-            <div key={i} className="bg-white border border-[#eaeaea] p-6 rounded-2xl space-y-4 animate-pulse">
-              <div className="h-4 bg-gray-100 rounded w-2/3" />
-              <div className="h-3 bg-gray-100 rounded w-1/3" />
-              <div className="border-t border-[#eaeaea] pt-4 flex justify-between">
-                <div className="h-4 bg-gray-100 rounded w-16" />
-                <div className="h-4 bg-gray-100 rounded w-16" />
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : exams.length === 0 ? (
-        // Empty State Panel (Figma Screenshot 1)
-        <div className="flex-1 flex flex-col items-center justify-center py-14 px-8 text-center max-w-2xl mx-auto my-auto w-full">
-          {/* Custom Pixel-Perfect Figma SVG Illustration */}
-          <svg viewBox="0 0 400 280" className="w-64 h-48 mb-6" fill="none" xmlns="http://www.w3.org/2000/svg">
-            {/* Soft grey background circle */}
-            <circle cx="200" cy="140" r="90" fill="#f0f0f2" />
-            
-            {/* Squiggle top left */}
-            <path d="M125 110 C125 75, 165 75, 140 100 C120 120, 110 115, 145 80" stroke="#18181b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            
-            {/* Sparkle bottom left */}
-            <path d="M135 190 Q135 198 127 198 Q135 198 135 206 Q135 198 143 198 Q135 198 135 190 Z" fill="none" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-
-            {/* Blue dot right */}
-            <circle cx="280" cy="165" r="4" fill="#2563eb" />
-            
-            {/* Small grey header card top right */}
-            <rect x="240" y="75" width="50" height="32" rx="6" fill="#ffffff" stroke="#e4e4e7" strokeWidth="1.5" />
-            <circle cx="250" cy="91" r="3.5" fill="#cbd5e1" />
-            <rect x="260" y="87" width="22" height="8" rx="4" fill="#cbd5e1" />
-            
-            {/* White document card in background */}
-            <rect x="155" y="85" width="90" height="120" rx="12" fill="#ffffff" stroke="#cbd5e1" strokeWidth="1.5" />
-            {/* Card content lines */}
-            <line x1="167" y1="105" x2="200" y2="105" stroke="#18181b" strokeWidth="6" strokeLinecap="round" />
-            <line x1="167" y1="123" x2="225" y2="123" stroke="#e2e8f0" strokeWidth="6" strokeLinecap="round" />
-            <line x1="167" y1="141" x2="225" y2="141" stroke="#e2e8f0" strokeWidth="6" strokeLinecap="round" />
-            <line x1="167" y1="159" x2="200" y2="159" stroke="#e2e8f0" strokeWidth="6" strokeLinecap="round" />
-            <line x1="167" y1="177" x2="220" y2="177" stroke="#e2e8f0" strokeWidth="6" strokeLinecap="round" />
-
-            {/* Magnifying glass overlay */}
-            {/* Glass Handle */}
-            <line x1="232" y1="172" x2="267" y2="207" stroke="#c0c0e0" strokeWidth="11" strokeLinecap="round" />
-            <line x1="232" y1="172" x2="267" y2="207" stroke="#d5d5ed" strokeWidth="7" strokeLinecap="round" />
-            {/* Glass Ring */}
-            <circle cx="205" cy="145" r="36" fill="#e8e8f8" fillOpacity="0.4" stroke="#c0c0e0" strokeWidth="6" />
-            
-            {/* Red X mark inside lens */}
-            <line x1="193" y1="133" x2="217" y2="157" stroke="#ef4444" strokeWidth="7" strokeLinecap="round" />
-            <line x1="217" y1="133" x2="193" y2="157" stroke="#ef4444" strokeWidth="7" strokeLinecap="round" />
-          </svg>
-          <h3 className="text-xl font-bold text-[#181818] tracking-tight">No exams yet</h3>
-          <p className="text-gray-500 text-xs max-w-md mt-2 mb-8 leading-relaxed">
-            Create your first exam paper to start collecting and grading student submissions. You can set up rubrics, define marking criteria, and let AI assist with grading.
-          </p>
-          <Link
-            href="/build-paper"
-            className="flex items-center justify-center bg-[#181818] hover:bg-black text-white px-7 py-3.5 rounded-full font-bold text-xs transition-colors shadow-lg cursor-pointer"
-          >
-            + Create Your First Exam Paper
-          </Link>
-        </div>
-      ) : (
-        // Filled Grid List (Screenshot 3/5)
-        <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-            {exams.map((exam) => {
-              const isFinished = exam.status === 'completed';
-              const isFailed = exam.status === 'failed' || exam.status === 'cancelled';
-              const isGenerating = ['queued', 'processing', 'generating'].includes(exam.status);
-              
-              if (isFinished) {
-                return (
-                  <div
-                    key={exam._id}
-                    className="bg-white border border-[#eaeaea] rounded-[24px] p-6 flex flex-col justify-between hover:shadow-md transition-shadow relative min-h-[140px]"
-                  >
-                    <div className="flex items-start justify-between gap-4">
-                      <h4 className="font-bold text-base text-[#181818] tracking-tight truncate-2-lines text-left">
-                        {exam.title}
-                      </h4>
-                      <div className="relative">
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            setActiveMenuId(activeMenuId === exam._id ? null : exam._id);
-                          }}
-                          className="text-gray-400 hover:text-gray-700 p-1 rounded-full cursor-pointer focus:outline-none"
-                        >
-                          <MoreVertical className="w-4 h-4" />
-                        </button>
-                        {activeMenuId === exam._id && (
-                          <div className="absolute right-0 mt-1 bg-white border border-[#eaeaea] rounded-xl shadow-lg py-1.5 w-36 z-20 text-left">
-                            <Link
-                              href={`/paper-view/${exam._id}`}
-                              className="block px-4 py-2 text-xs font-bold text-gray-700 hover:bg-gray-50 transition-colors"
-                              onClick={() => setActiveMenuId(null)}
-                            >
-                              View Paper
-                            </Link>
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                handleDelete(exam._id, e);
-                                setActiveMenuId(null);
-                              }}
-                              className="w-full text-left px-4 py-2 text-xs font-bold text-red-500 hover:bg-red-50 transition-colors"
-                            >
-                              Delete
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="flex justify-between items-center text-xs font-semibold text-gray-500">
-                      <span>Assigned on : {formatDate(exam.createdAt)}</span>
-                      <span>Due : {formatDate(exam.dueDate)}</span>
-                    </div>
-                  </div>
-                );
-              }
-
-              if (isGenerating) {
-                return (
-                  <div
-                    key={exam._id}
-                    className="bg-white border border-[#eaeaea] rounded-[24px] p-6 flex flex-col justify-between relative min-h-[140px]"
-                  >
-                    <div className="flex items-start justify-between gap-4">
-                      <h4 className="font-bold text-base text-[#181818] tracking-tight truncate-2-lines text-left">
-                        {exam.title}
-                      </h4>
-                      <div className="text-[11px] font-bold text-[#ed6c37] bg-orange-50 px-2 py-0.5 rounded-full border border-orange-100 flex items-center gap-1.5 shrink-0">
-                        <svg className="animate-spin h-3 w-3 text-[#ed6c37]" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                        </svg>
-                        <span>Generating...</span>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <div className="w-full bg-gray-100 rounded-full h-1.5">
-                        <div
-                          className="bg-[#ed6c37] h-1.5 rounded-full transition-all duration-300"
-                          style={{ width: `${progressUpdates[exam._id]?.progress || 0}%` }}
-                        />
-                      </div>
-                      <div className="flex justify-between items-center text-[10px] text-gray-400 font-semibold">
-                        <span>Assigned on : {formatDate(exam.createdAt)}</span>
-                        <button
-                          type="button"
-                          onClick={(e) => handleCancel(exam._id, e)}
-                          className="text-rose-600 hover:underline cursor-pointer"
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                );
-              }
-
-              // Failed/Cancelled state card
-              return (
-                <div
-                  key={exam._id}
-                  className="bg-white border border-[#eaeaea] rounded-[24px] p-6 flex flex-col justify-between relative min-h-[140px]"
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <h4 className="font-bold text-base text-[#181818] tracking-tight truncate-2-lines text-left">
-                      {exam.title}
-                    </h4>
-                    <div className="text-[11px] font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-100 shrink-0">
-                      Failed
-                    </div>
-                  </div>
-
-                  <div className="flex justify-between items-center text-xs font-semibold text-gray-500">
-                    <button
-                      type="button"
-                      onClick={(e) => handleRetry(exam._id, e)}
-                      className="text-[#ed6c37] hover:underline flex items-center gap-1 cursor-pointer"
-                    >
-                      <RotateCw className="w-3 h-3" /> Retry
-                    </button>
-                    <button
-                      type="button"
-                      onClick={(e) => handleDelete(exam._id, e)}
-                      className="text-red-500 hover:underline cursor-pointer"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
+        <div className="relative z-10 space-y-4 max-w-2xl">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-xs font-bold text-[#f07b4d]">
+            <Sparkles className="w-3.5 h-3.5 fill-[#f07b4d]" />
+            <span>AI Exam Engine Workspace</span>
           </div>
-
-          {/* Floating Dark Action Button (Screenshot 3) */}
-          <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-30 no-print">
+          <h1 className="text-2xl lg:text-4xl font-extrabold tracking-tight leading-tight">
+            Welcome back, <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-[#f07b4d]">{userName || 'John Doe'}</span>!
+          </h1>
+          <p className="text-gray-300 text-xs lg:text-sm max-w-lg leading-relaxed">
+            Construct high-quality, CBSE-aligned exam papers from study reference files in less than 2 minutes. Ready to build another assessment?
+          </p>
+          <div className="pt-2">
             <Link
               href="/build-paper"
-              className="flex items-center gap-1.5 bg-[#181818] hover:bg-black text-white px-7 py-3.5 rounded-full font-bold text-xs transition-all shadow-xl hover:-translate-y-0.5 duration-150"
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-[#ed6c37] to-[#f07b4d] hover:from-[#f07b4d] hover:to-[#ed6c37] text-white px-6 py-3 rounded-full font-bold text-xs shadow-md hover:shadow-lg transition-all"
             >
-              <Plus className="w-4 h-4 text-white" />
-              <span>Build Paper</span>
+              <Plus className="w-4 h-4" />
+              <span>Build Exam Paper</span>
             </Link>
           </div>
-        </>
-      )}
+        </div>
+      </div>
+
+      {/* 2. Key Metrics Stats Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Stat 1 */}
+        <div className="bg-white border border-[#eaeaea] p-5 rounded-[24px] shadow-sm flex items-center justify-between">
+          <div className="space-y-1">
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Exams Generated</p>
+            <p className="text-2xl font-black text-[#181818]">{completedExams.length}</p>
+          </div>
+          <div className="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center text-[#ed6c37]">
+            <FileText className="w-5 h-5" />
+          </div>
+        </div>
+
+        {/* Stat 2 */}
+        <div className="bg-white border border-[#eaeaea] p-5 rounded-[24px] shadow-sm flex items-center justify-between">
+          <div className="space-y-1">
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">AI Questions</p>
+            <p className="text-2xl font-black text-[#181818]">{totalQuestions}</p>
+          </div>
+          <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600">
+            <TrendingUp className="w-5 h-5" />
+          </div>
+        </div>
+
+        {/* Stat 3 */}
+        <div className="bg-white border border-[#eaeaea] p-5 rounded-[24px] shadow-sm flex items-center justify-between">
+          <div className="space-y-1">
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">AI Time Saved</p>
+            <p className="text-2xl font-black text-[#181818]">{hoursSaved} hrs</p>
+          </div>
+          <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
+            <Clock className="w-5 h-5" />
+          </div>
+        </div>
+
+        {/* Stat 4 */}
+        <div className="bg-white border border-[#eaeaea] p-5 rounded-[24px] shadow-sm flex items-center justify-between">
+          <div className="space-y-1">
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Active Groups</p>
+            <p className="text-2xl font-black text-[#181818]">4</p>
+          </div>
+          <div className="w-10 h-10 rounded-full bg-purple-50 flex items-center justify-center text-purple-600">
+            <Users className="w-5 h-5" />
+          </div>
+        </div>
+      </div>
+
+      {/* 3. Action Grid & Recent Activity */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        {/* Left 2 Columns: Quick Tools */}
+        <div className="lg:col-span-2 space-y-6">
+          <div className="flex justify-between items-center">
+            <h3 className="text-base font-bold text-[#181818]">Quick Tools</h3>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            
+            {/* Tool 1 */}
+            <Link
+              href="/build-paper"
+              className="bg-white border border-[#eaeaea] p-5 rounded-[20px] shadow-sm hover:shadow-md hover:border-orange-200 transition-all group flex flex-col justify-between h-[160px]"
+            >
+              <div className="space-y-2">
+                <div className="w-9 h-9 rounded-xl bg-orange-50 text-[#ed6c37] flex items-center justify-center group-hover:scale-105 transition-transform">
+                  <Sparkles className="w-4 h-4" />
+                </div>
+                <h4 className="font-bold text-sm text-[#181818]">Build Exam Paper</h4>
+                <p className="text-xs text-gray-400 leading-relaxed">
+                  Upload PDF references to generate customized CBSE-aligned question sheets.
+                </p>
+              </div>
+              <div className="text-[11px] font-bold text-[#ed6c37] flex items-center gap-1.5 mt-2">
+                <span>Configure Exam</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </Link>
+
+            {/* Tool 2 */}
+            <Link
+              href="/toolkit"
+              className="bg-white border border-[#eaeaea] p-5 rounded-[20px] shadow-sm hover:shadow-md hover:border-blue-200 transition-all group flex flex-col justify-between h-[160px]"
+            >
+              <div className="space-y-2">
+                <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+                  <Notebook className="w-4 h-4" />
+                </div>
+                <h4 className="font-bold text-sm text-[#181818]">AI Teacher's Toolkit</h4>
+                <p className="text-xs text-gray-400 leading-relaxed">
+                  Evaluate custom grading rubrics, syllabus summaries, and mock parameters.
+                </p>
+              </div>
+              <div className="text-[11px] font-bold text-blue-600 flex items-center gap-1.5 mt-2">
+                <span>Open Toolkit</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </Link>
+
+            {/* Tool 3 */}
+            <Link
+              href="/library"
+              className="bg-white border border-[#eaeaea] p-5 rounded-[20px] shadow-sm hover:shadow-md hover:border-emerald-200 transition-all group flex flex-col justify-between h-[160px]"
+            >
+              <div className="space-y-2">
+                <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+                  <Bookmark className="w-4 h-4" />
+                </div>
+                <h4 className="font-bold text-sm text-[#181818]">Reference Library</h4>
+                <p className="text-xs text-gray-400 leading-relaxed">
+                  Access past templates, reusable documents, and syllabus blueprints.
+                </p>
+              </div>
+              <div className="text-[11px] font-bold text-emerald-600 flex items-center gap-1.5 mt-2">
+                <span>View Library</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </Link>
+
+            {/* Tool 4 */}
+            <Link
+              href="/my-groups"
+              className="bg-white border border-[#eaeaea] p-5 rounded-[20px] shadow-sm hover:shadow-md hover:border-purple-200 transition-all group flex flex-col justify-between h-[160px]"
+            >
+              <div className="space-y-2">
+                <div className="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+                  <Users className="w-4 h-4" />
+                </div>
+                <h4 className="font-bold text-sm text-[#181818]">Student Groups</h4>
+                <p className="text-xs text-gray-400 leading-relaxed">
+                  Organize student sections, assign generated test papers, and view grades.
+                </p>
+              </div>
+              <div className="text-[11px] font-bold text-purple-600 flex items-center gap-1.5 mt-2">
+                <span>Manage Groups</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </Link>
+          </div>
+        </div>
+
+        {/* Right 1 Column: Recent Exams Activity */}
+        <div className="space-y-6">
+          <div className="flex justify-between items-center">
+            <h3 className="text-base font-bold text-[#181818]">Recent Activity</h3>
+            <Link href="/exams" className="text-xs font-bold text-[#ed6c37] hover:underline">
+              View All
+            </Link>
+          </div>
+
+          <div className="space-y-4">
+            {completedExams.length === 0 ? (
+              <div className="bg-white border border-[#eaeaea] p-6 rounded-[24px] text-center space-y-2">
+                <FileText className="w-8 h-8 text-gray-300 mx-auto" />
+                <p className="text-xs font-bold text-gray-500">No exams yet</p>
+                <p className="text-[10px] text-gray-400">Your generated exam papers will appear here.</p>
+              </div>
+            ) : (
+              completedExams.slice(0, 3).map((exam) => (
+                <Link
+                  href={`/paper-view/${exam._id}`}
+                  key={exam._id}
+                  className="block bg-white border border-[#eaeaea] p-4 rounded-[20px] shadow-sm hover:shadow-md transition-shadow relative"
+                >
+                  <div className="space-y-2 text-left">
+                    <h4 className="font-bold text-xs text-[#181818] truncate leading-snug">
+                      {exam.title}
+                    </h4>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full ${getDifficultyColor(exam.difficulty)}`}>
+                        {exam.difficulty}
+                      </span>
+                      <span className="text-[9px] font-semibold text-gray-400">
+                        {exam.marks} Marks
+                      </span>
+                      <span className="text-[9px] font-semibold text-gray-400">
+                        • {formatDate(exam.createdAt)}
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              ))
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

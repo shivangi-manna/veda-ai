@@ -70,9 +70,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const navItems = [
     { label: 'Home', href: '/', icon: LayoutGrid },
     { label: 'My Groups', href: '/my-groups', icon: Contact2 },
-    { label: 'Exams', href: '/', icon: FileText, badge: true },
+    { label: 'Exams', href: '/exams', icon: FileText, badge: true },
     { label: 'AI Teacher\'s Toolkit', href: '/toolkit', icon: Notebook },
-    { label: 'My Library', href: '/', icon: History },
+    { label: 'My Library', href: '/library', icon: History },
   ];
 
   // Detect current breadcrumb page title
@@ -206,7 +206,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 {navItems.map((item) => {
                   const Icon = item.icon;
                   const active =
-                    (item.label === 'Exams' && (pathname === '/' || pathname.startsWith('/paper-view') || pathname.startsWith('/build-paper'))) ||
+                    (item.label === 'Home' && pathname === '/') ||
+                    (item.label === 'Exams' && (pathname.startsWith('/exams') || pathname.startsWith('/paper-view') || pathname.startsWith('/build-paper'))) ||
                     (item.label === 'My Groups' && pathname === '/my-groups') ||
                     (item.label === 'AI Teacher\'s Toolkit' && pathname === '/toolkit') ||
                     (item.label === 'My Library' && pathname === '/library');
@@ -330,9 +331,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     {navItems.map((item) => {
                       const Icon = item.icon;
                       const active =
-                        (item.label === 'Exams' && (pathname === '/' || pathname.startsWith('/paper-view') || pathname.startsWith('/build-paper'))) ||
+                        (item.label === 'Home' && pathname === '/') ||
+                        (item.label === 'Exams' && (pathname.startsWith('/exams') || pathname.startsWith('/paper-view') || pathname.startsWith('/build-paper'))) ||
                         (item.label === 'My Groups' && pathname === '/my-groups') ||
-                        (item.label === 'AI Teacher\'s Toolkit' && pathname === '/toolkit');
+                        (item.label === 'AI Teacher\'s Toolkit' && pathname === '/toolkit') ||
+                        (item.label === 'My Library' && pathname === '/library');
                       return (
                         <Link
                           key={item.label}
@@ -441,7 +444,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Link
             href="/"
             className={`flex flex-col items-center gap-1 text-[10px] font-semibold transition-all ${
-              pathname === '/' && !pathname.includes('/paper-view') && !pathname.includes('/build-paper') ? 'text-white' : 'text-gray-500 hover:text-gray-300'
+              pathname === '/' ? 'text-white' : 'text-gray-500 hover:text-gray-300'
             }`}
           >
             <LayoutGrid className="w-[22px] h-[22px]" strokeWidth={2} />
@@ -450,9 +453,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
           {/* Exams */}
           <Link
-            href="/"
+            href="/exams"
             className={`flex flex-col items-center gap-1 text-[10px] font-semibold transition-all ${
-              (pathname === '/' || pathname.startsWith('/paper-view') || pathname.startsWith('/build-paper')) ? 'text-white' : 'text-gray-500 hover:text-gray-300'
+              (pathname.startsWith('/exams') || pathname.startsWith('/paper-view') || pathname.startsWith('/build-paper')) ? 'text-white' : 'text-gray-500 hover:text-gray-300'
             }`}
           >
             <FileText className="w-[22px] h-[22px]" strokeWidth={2} />
@@ -461,7 +464,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
           {/* Library */}
           <Link
-            href="/"
+            href="/library"
             className={`flex flex-col items-center gap-1 text-[10px] font-semibold transition-all ${
               pathname === '/library' ? 'text-white' : 'text-gray-500 hover:text-gray-300'
             }`}
