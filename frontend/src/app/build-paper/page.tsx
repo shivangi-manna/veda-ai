@@ -296,7 +296,7 @@ export default function BuildPaper() {
             className={`border-2 border-dashed rounded-[20px] p-8 text-center cursor-pointer transition-all ${
               dragActive
                 ? 'border-[#ed6c37] bg-orange-50/20'
-                : 'border-[#e4e4e7] hover:border-gray-300 hover:bg-gray-50/30'
+                : 'border-[#e4e4e7] bg-[#f4f4f4] hover:border-gray-300 hover:bg-gray-200/50'
             }`}
           >
             <input
