@@ -12,7 +12,7 @@
 
 Veda AI is designed to streamline the assessment creation process using advanced AI. By simply providing a topic or uploading study material, Veda AI orchestrates a robust generation pipeline to deliver print-ready question papers.
 
-- **🤖 Google Gemini Integration**: Leverages `gemini-2.5-flash` or custom endpoints for high-speed, highly structured reasoning and multiple-choice generation.
+- **🤖 Anthropic & OpenAI-Compatible Integration**: Leverages Anthropic (Claude) or custom OpenAI-compatible endpoints (such as `deepseek-v4-flash-free` or GPT models) for high-speed, highly structured reasoning and multiple-choice generation.
 - **📄 Document Processing**: Upload PDF or TXT reference materials. The backend automatically extracts and synthesizes the content.
 - **🛡️ Ironclad Validation**: Uses `Zod` schemas and a discriminated union architecture to guarantee the AI outputs strict JSON structures (e.g. enforcing 4 options for MCQs).
 - **🔁 Autonomous Self-Correction**: The AI service automatically catches validation failures and prompts the LLM to correct its own schema formatting, retrying up to 3 times before failing gracefully.
@@ -29,7 +29,7 @@ Veda AI is designed to streamline the assessment creation process using advanced
 | :--- | :--- |
 | **Frontend** | Next.js 14, Zustand, Tailwind CSS, Lucide React, Axios, React Hook Form |
 | **Backend** | Node.js, Express, TypeScript, Zod, Socket.IO, pdf-lib, pdf-parse, Winston |
-| **AI Layer** | `@google/generative-ai` (Gemini SDK), Prompt Engineering |
+| **AI Layer** | Anthropic SDK, OpenAI-compatible API Clients, Prompt Engineering |
 | **Data & Queue** | MongoDB (Mongoose), Redis, BullMQ |
 
 ---

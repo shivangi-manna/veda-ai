@@ -40,8 +40,11 @@ services:
       - MONGODB_URI=${MONGODB_URI:-mongodb://mongodb:27017/vedaai}
       # Default to local redis container, but allow override via host environment
       - REDIS_URL=${REDIS_URL:-redis://redis:6379}
-      # Pass through the Gemini API Key
+      # Pass through the Gemini / Anthropic API Keys
       - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - ANTHROPIC_BASE_URL=${ANTHROPIC_BASE_URL}
+      - ANTHROPIC_MODEL=${ANTHROPIC_MODEL}
       - FRONTEND_URL=${FRONTEND_URL:-http://localhost:3000}
       - NODE_ENV=${NODE_ENV:-production}
     depends_on:
